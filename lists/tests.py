@@ -5,18 +5,10 @@ from lists.views import home_page
 
 class HomePageTest(TestCase):
  
-
-    def test_root_url(self):
-        '''test: root url '/' resolves to home page view'''
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-        
-
-    def test_home_page(self):
+ 
+   def test_home_page(self):
         '''test: home page returns correct html'''
-        request = HttpRequest()  
-        response = home_page(request)  
+        response = self.client.get('/')
         html = response.content.decode('utf8')  
-        self.assertTrue(html.startswith('<html>'))  
-        self.assertIn('<title>To-Do lists</title>', html)  
-        self.assertTrue(html.endswith('</html>'))  
+        # new test checks if the correct template was rendered
+        self.assertTemplateUsed(response, 'home.html')
