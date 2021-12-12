@@ -1,6 +1,8 @@
 #!/home/ipopov/dev/PycharmProjects/TDD/bin/python3
 
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 class NewUserTest(unittest.TestCase):
@@ -17,21 +19,36 @@ class NewUserTest(unittest.TestCase):
 
     def test_start(self):
         '''test: user can start a list and retreive it later'''
+        
         #it generally works -- user gets a start page  
         self.browser.get('http://localhost:8000')
-        #user gets the correct start page  
+        
+        #user gets the correct start page: the page title and header mention to-do lists  
         self.assertIn('To-Do', self. browser.title)
-        self.fail('Test finished!')
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header_text)
+
+        #user is prompted to enter a list element
+        inputbox = self.browser.find_element_by_id('id_new_item')  
+        self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')    
+
+
+        #the text 'bla-bla-bla' is entered
+        inputbox.send_keys('bla-bla-bla')
+        
+        #after pressing enter we refresh the page, and then it contains the element with text 'bla-bla-bla' 
+        inputbox.send_keys(Keys.ENTER)  
+        time.sleep(1) 
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')  
+        self.assertTrue(any(row.text == '1: bla-bla-bla' for row in rows))
+
+        self.fail('Finish the test!')
 
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
 
-# test 3: user is prompted to enter a list element
-
-# test 4: the text 'bla-bla-bla' is entered
-
-# test 5: after pressing enter we refresh the page, and then it contains the element with text 'bla-bla-bla' 
 
 # test 6: there's still a prompt to enter an element
 
