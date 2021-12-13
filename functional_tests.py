@@ -13,8 +13,8 @@ class NewUserTest(unittest.TestCase):
     
 
     def tearDown(self):
-        self.browser.quit()
-
+#        self.browser.quit()
+        pass
 
 
     def test_start(self):
@@ -41,7 +41,7 @@ class NewUserTest(unittest.TestCase):
         time.sleep(1) 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')  
-        self.assertTrue(any(row.text == '1: bla-bla-bla' for row in rows))
+        self.assertIn('1: bla-bla-bla', [row.text for row in rows]) 
 
         self.fail('Finish the test!')
 
