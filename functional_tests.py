@@ -17,6 +17,12 @@ class NewUserTest(unittest.TestCase):
         pass
 
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
+
     def test_start(self):
         '''test: user can start a list and retreive it later'''
         
@@ -39,9 +45,19 @@ class NewUserTest(unittest.TestCase):
         #after pressing enter we refresh the page, and then it contains the element with text 'bla-bla-bla' 
         inputbox.send_keys(Keys.ENTER)  
         time.sleep(1) 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')  
-        self.assertIn('1: bla-bla-bla', [row.text for row in rows]) 
+        self.check_for_row_in_list_table('1: bla-bla-bla')
+
+        #there's still a prompt to enter an element
+        inputbox = self.browser.find_element_by_id('id_new_item')
+
+        #user enters text 'abl-abl-abl' and presses enter
+        inputbox.send_keys('abl-abl-abl')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        
+        #after page is refreshed, there're two elements on it
+        self.check_for_row_in_list_table('1: bla-bla-bla')
+        self.check_for_row_in_list_table('2: abl-abl-abl')
 
         self.fail('Finish the test!')
 
@@ -50,11 +66,8 @@ if __name__ == '__main__':
     unittest.main(warnings='ignore')
 
 
-# test 6: there's still a prompt to enter an element
 
-# test 7: user enters text 'abl-abl-abl' and presses enter
 
-# test 8: after page is refreshed, there're two elements on it
 
 # test 9: the unique URL is generated for user
 
