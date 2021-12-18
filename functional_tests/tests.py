@@ -1,11 +1,12 @@
 #!/home/ipopov/dev/PycharmProjects/TDD/bin/python3
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
 
-class NewUserTest(unittest.TestCase):
+
+class NewUserTest(LiveServerTestCase):
     
 
     def setUp(self):
@@ -27,7 +28,7 @@ class NewUserTest(unittest.TestCase):
         '''test: user can start a list and retreive it later'''
         
         #it generally works -- user gets a start page  
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         
         #user gets the correct start page: the page title and header mention to-do lists  
         self.assertIn('To-Do', self. browser.title)
@@ -60,13 +61,6 @@ class NewUserTest(unittest.TestCase):
         self.check_for_row_in_list_table('2: abl-abl-abl')
 
         self.fail('Finish the test!')
-
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
-
-
-
 
 
 # test 9: the unique URL is generated for user
