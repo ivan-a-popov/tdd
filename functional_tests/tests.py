@@ -70,7 +70,6 @@ class NewUserTest(LiveServerTestCase):
         self.wait_for_row_in_list_table('1: bla-bla-bla')
         self.wait_for_row_in_list_table('2: abl-abl-abl')
 
-        self.fail('Finish the test!')
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # test 9: the unique URL is generated for user
