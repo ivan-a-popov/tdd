@@ -4,6 +4,7 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.by import By
 import time
 
 
@@ -18,16 +19,15 @@ class NewUserTest(LiveServerTestCase):
     
 
     def tearDown(self):
-#        self.browser.quit()
-        pass
+        self.browser.quit()
 
 
     def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
         while True:
             try:
-                table = self.browser.find_element_by_id('id_list_table')
-                rows = table.find_elements_by_tag_name('tr')
+                table = self.browser.find_element(By.ID, 'id_list_table')
+                rows = table.find_elements(By.TAG_NAME, 'tr')
                 self.assertIn(row_text, [row.text for row in rows])
                 return
             except (AssertionError, WebDriverException) as e:
@@ -44,11 +44,11 @@ class NewUserTest(LiveServerTestCase):
         
         # user gets the correct start page: the page title and header mention to-do lists  
         self.assertIn('To-Do', self. browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').text
+        header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         self.assertIn('To-Do', header_text)
 
         # user is prompted to enter a list element
-        inputbox = self.browser.find_element_by_id('id_new_item')  
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')  
         self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')    
 
 
@@ -60,7 +60,7 @@ class NewUserTest(LiveServerTestCase):
         self.wait_for_row_in_list_table('1: bla-bla-bla')
 
         # there's still a prompt to enter an element
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
 
         # user enters text 'abl-abl-abl' and presses enter
         inputbox.send_keys('abl-abl-abl')
@@ -75,7 +75,7 @@ class NewUserTest(LiveServerTestCase):
         # test 9: the unique URL is generated for user
         # user starts a new to-do list
         self.browser.get(self.live_server_url)
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys('bla-bla-bla')
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: bla-bla-bla')
@@ -94,26 +94,28 @@ class NewUserTest(LiveServerTestCase):
 
         # user2 visits the home page.  There is no sign of user1's list
         self.browser.get(self.live_server_url)
-        page_text = self.browser.find_element_by_tag_name('body').text
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
         self.assertNotIn('bla-bla-bla', page_text)
         self.assertNotIn('abl-abl-abl', page_text)
 
         # user2 starts a new list by entering a new item.
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys('Kill Bill')
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: Kill Bill')
 
         # user2 gets his own unique URL
         user2_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/lists/.+')
+        self.assertRegex(user2_list_url, '/lists/.+')
         self.assertNotEqual(user2_list_url, user1_list_url)
 
         # Again, there is no trace of user1's list
-        page_text = self.browser.find_element_by_tag_name('body').text
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
         self.assertNotIn('bla-bla-bla', page_text)
         self.assertIn('Kill Bill', page_text)
 
 
-# test 10: user follows the URL, and all two enries are still there
+# user1 wonders whether the site will remember his list. Then he sees
+# that the site has generated a unique URL for him -- there is some
+# explanatory text to that effect.
 
