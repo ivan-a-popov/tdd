@@ -27,7 +27,7 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for_row_in_list_table('1: Buy milk')
         
         # Perversely, he now decides to submit a second blank list item
-        self.browser.find_element(By,ID, 'id_new_item').send_keys(Keys.ENTER)
+        self.browser.find_element(By.ID, 'id_new_item').send_keys(Keys.ENTER)
 
         # He receives a similar warning on the list page
         self.wait_for(lambda: self.assertEqual(
