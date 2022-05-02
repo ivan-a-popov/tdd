@@ -7,7 +7,7 @@ User=ipopov
 WorkingDirectory=/home/ipopov/sites/DOMAIN
 EnvironmentFile=/home/ipopov/sites/DOMAIN/.env
 
-ExecStart=/home/ipopov/sites/DOMAIN/virtualenv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket superlists.wsgi:application
+ExecStart=/home/ipopov/sites/DOMAIN/virtualenv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket tdl.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
