@@ -32,10 +32,13 @@ class ListAndItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'Item the second')
         self.assertEqual(second_saved_item.list, new_list)
 
-    def test_cannot_save_empty_list_items(self):
-        list_ = List.objects.create()
-        item = Item(list=list_, text='')
+    def test_cannot_save_empty_the_listitems(self):
+        the_list = List.objects.create()
+        item = Item(list=the_list, text='')
         with self.assertRaises(ValidationError):
             item.save()
             item.full_clean()
 
+    def test_get_absolute_url(self):
+        the_list = List.objects.create()
+        self.assertEqual(the_list.get_absolute_url(), f'/lists/{the_list.id}/')
