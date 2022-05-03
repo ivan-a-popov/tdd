@@ -17,10 +17,10 @@ class NewVisitorTest(FunctionalTest):
         # user gets the correct start page: the page title and header mention to-do lists
         self.assertIn('To-Do', self. browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
-        self.assertIn('To-Do', header_text)
+        self.assertIn('to-do', header_text)
 
         # user is prompted to enter a list element
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox = self.get_item_input_box()
         self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
 
         # the text 'bla-bla-bla' is entered
@@ -31,21 +31,21 @@ class NewVisitorTest(FunctionalTest):
         self.wait_for_row_in_list_table('1: bla-bla-bla')
 
         # there's still a prompt to enter an element
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox = self.get_item_input_box()
 
         # user enters text 'abl-abl-abl' and presses enter
-        inputbox.send_keys('abl-abl-abl')
+        inputbox.send_keys('tik-tak-toe')
         inputbox.send_keys(Keys.ENTER)
 
         # after page is refreshed, there're two elements on it
         self.wait_for_row_in_list_table('1: bla-bla-bla')
-        self.wait_for_row_in_list_table('2: abl-abl-abl')
+        self.wait_for_row_in_list_table('2: tik-tak-toe')
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # test: the unique URL is generated for user
         # user starts a new to-do list
         self.browser.get(self.live_server_url)
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('bla-bla-bla')
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: bla-bla-bla')
@@ -68,7 +68,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('abl-abl-abl', page_text)
 
         # user2 starts a new list by entering a new item.
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Kill Bill')
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: Kill Bill')
