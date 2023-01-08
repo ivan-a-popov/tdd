@@ -22,7 +22,7 @@ class SendLoginEmailViewTest(TestCase):
         self.assertEqual(mock_send_mail.called, True)
         (subject, body, from_email, to_list), kwargs = mock_send_mail.call_args
         self.assertEqual(subject, 'Your login link for ToDoLists')
-        self.assertEqual(from_email, 'noreply@todolists')
+        self.assertEqual(from_email, 'i.popov@helpist.ru')
         self.assertEqual(to_list, ['user@example.com'])
 
 #     def test_sends_mail_to_address_from_post(self):

@@ -6,7 +6,7 @@ import re
 from .base import FunctionalTest
 
 TEST_EMAIL = 'user@example.com'
-SUBJECT = 'Your login link for TDL (ToDoLists)'
+SUBJECT = 'Your login link for ToDoLists'
 
 
 class LoginTest(FunctionalTest):
@@ -47,4 +47,14 @@ class LoginTest(FunctionalTest):
         )
         navbar = self.browser.find_element(By.CSS_SELECTOR, '.navbar')
         self.assertIn(TEST_EMAIL, navbar.text)
+
+        # Now he logs out
+        self.browser.find_element(By.LINK_TEXT, 'Log out').click()
+
+        # He is logged out
+        self.wait_for(
+            lambda: self.browser.find_element(By.NAME, 'email')
+        )
+        navbar = self.browser.find_element(By.CSS_SELECTOR, '.navbar')
+        self.assertNotIn(TEST_EMAIL, navbar.text)
 
