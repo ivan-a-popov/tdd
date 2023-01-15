@@ -1,7 +1,7 @@
 from django.shortcuts import redirect,render
 from lists.models import Item, List
 from django.core.exceptions import ValidationError
-from lists.forms import ItemForm, ExistingListItemForm
+from lists.forms import ItemForm, ExistingListItemForm, NewListForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -23,16 +23,11 @@ def view_list(request, list_id):
 
 
 def new_list(request):
-    form = ItemForm(data=request.POST)
+    form = NewListForm(data=request.POST)
     if form.is_valid():
-        the_list = List()
-        the_list.owner = request.user
-        the_list.save()
-        form.save(for_list=the_list)
+        the_list = form.save(owner=request.user)
         return redirect(the_list)
-    else:
-        return render(request, 'home.html', {"form": form})
-
+    return render(request, 'home.html', {'form': form})
 
 def my_lists(request, email):
     owner = User.objects.get(email=email)
